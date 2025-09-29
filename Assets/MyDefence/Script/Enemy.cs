@@ -3,11 +3,11 @@ using UnityEngine;
 namespace MyDefence
 {
     /// <summary> Enemy 를 관리하는 클래스
-    public class Move : MonoBehaviour
+    public class Enemy : MonoBehaviour
     {
         #region Variables
         //이동 목표 위치를 가지고 있는 오브젝트
-        public Transform target;
+        private Transform target;
 
         //이동 속도
         public float speed = 5f;
@@ -17,10 +17,10 @@ namespace MyDefence
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-
+            //초기화
+            target = WayPoints.points[0];
         }
 
-        // Update is called once per frame
         void Update()
         {
             //타겟을 향해 이동

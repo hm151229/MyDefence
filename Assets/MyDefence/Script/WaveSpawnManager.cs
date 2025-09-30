@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
+using System.Threading;
 
 namespace MyDefence
 {
@@ -16,15 +18,19 @@ namespace MyDefence
 
         //스폰 타이머 
         public float spawnTimer = 5f;  //타이머 기준 시간
-        private float countdown = 0f;   //시간 누적 변수
+        public float countdown = 0f;   //시간 누적 변수
 
-        private int waveCountdown = 1;
+        //웨이브 카운트
+        private int waveCount = 0;
+
+        //UI - Text
+        public TextMeshProUGUI countdownText;
         #endregion
 
         #region Unity Event Method
         void Start()
         {
-            EnemySpawn();
+            //EnemySpawn();
         }
 
         void Update()
@@ -39,15 +45,23 @@ namespace MyDefence
                 //타이머 초기화
                 countdown = 0f;
             }
+
+            //UI - 카운트다운 텍스트
+            //countdown 특정 범위(min, max) 설정 (-값이 안 되도록 설정)
+            countdown = Mathf.Clamp(countdown, 0f, Mathf.Infinity);
+            //countdownText.text = string.Format("{0.00.00}", countdown); //실수(소수점 이하) 출력
+            countdownText.text = Mathf.Round(countdown).ToString();       //반올림하여 정수 출력
         }
+
+        
         #endregion
 
         #region Custom Method
         //enemy 스폰 웨이브
         IEnumerator SpawnWave()
         {
-            waveCountdown++;
-            for (int i = 0; i < waveCountdown; i++)
+            waveCount++;
+            for (int i = 0; i < waveCount; i++)
             {
                 EnemySpawn();
                 yield return new WaitForSeconds(0.5f);

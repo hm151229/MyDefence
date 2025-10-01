@@ -21,7 +21,13 @@ namespace MyDefence
         private float countdown = 0f;
         public float searchTimer = 0.2f;
 
-        //
+        //발사 타이머 
+        private float fireTimer = 1f;
+        private float fireCountdown = 0f;
+
+        //총알 프리팹 오브젝트
+        public GameObject bulletPrefab;
+        public Transform firePoint;
         #endregion
 
         #region Unity Event Method
@@ -52,27 +58,28 @@ namespace MyDefence
 
             if (target == null) 
                 return;
-            
+
             //타겟을 향해서 partToRotate 회전
-            //방향을 구하기
-            Vector3 dir = target.transform.position - this.transform.position;
+            LockOn();
 
-            //방향에 회전값을 구하기
-            Quaternion lookRotation = Quaternion.LookRotation(dir);
-            Quaternion lerpRotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * rotateSpeed);
-            Vector3 eulerValue = lerpRotation.eulerAngles;
+            //
+            fireCountdown += Time.deltaTime;
+            if (fireCountdown >= fireTimer)
+            {
+                //타이머기능
+                Shoot();
+                //타이머 초기화
+                fireCountdown = 0f;
+            }
 
-            //euler 값(x,y,z)에서 회전값(x,y,z,w) 얻어오기 - y축 값만 회전에 적용 
-            partToRotate.rotation = Quaternion.Euler(0f, eulerValue.y, 0f);
-            
         }
         #endregion
 
-        #region Custom Me
+        #region Custom Method
         //타워에서 가장 가까운 적 찾기
         void UpdateTarget()
         {
-            //맴 위에 있는 모든 enemy 게임오브젝트 가져오기
+            //맵 위에 있는 모든 enemy 게임오브젝트 가져오기
             GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
 
             //최소거리 변수 초기화
@@ -85,14 +92,14 @@ namespace MyDefence
             {
                 //enemy과의 거리 구하기
                 float distance = Vector3.Distance(transform.position, enemy.transform.position);
-                if(distance<minDistance)
+                if (distance < minDistance)
                 {
                     minDistance = distance;
-                    nearEnemy= enemy;
+                    nearEnemy = enemy;
                 }
             }
 
-            //가장 가까운 적을 찾았다
+            //가장 가까운 적을 찾았다, 이때 최소거리는 
             if (nearEnemy != null && minDistance <= attackRange)
             {
                 target = nearEnemy;
@@ -102,7 +109,33 @@ namespace MyDefence
                 target = null;
             }
         }
-        #endregion
+        public void LockOn()
+        {
+            //방향을 구하기
+            Vector3 dir = target.transform.position - this.transform.position;
 
+            //방향에 회전값을 구하기
+            Quaternion lookRotation = Quaternion.LookRotation(dir);
+            Quaternion lerpRotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * rotateSpeed);
+            Vector3 eulerValue = lerpRotation.eulerAngles;
+
+            //euler 값(x,y,z)에서 회전값(x,y,z,w) 얻어오기 - y축 값만 회전에 적용 
+            partToRotate.rotation = Quaternion.Euler(0f, eulerValue.y, 0f);
+        }
+
+        //발사
+        void Shoot()
+        {
+            Debug.Log("Shoot!!!");
+            //총구(firePoint) 위치에 탄환 객체 생성하기
+            GameObject bullotGo = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            Bullet bullet = bullotGo.GetComponent<Bullet>();
+            if (bullet != null)
+            {
+                bullet.SetTarget(target.transform);
+            }
+        }
+        #endregion
     }
 }
+

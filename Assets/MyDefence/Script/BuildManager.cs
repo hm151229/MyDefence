@@ -36,13 +36,14 @@ namespace MyDefence
         private GameObject turretToBuild;
 
         public GameObject machineGunPrefab;
+        public GameObject RocketPrefab;
         #endregion
 
         #region Unity Event Method
         private void Start()
         {
             //초기화 - 임시
-            turretToBuild = machineGunPrefab;        
+            //turretToBuild = machineGunPrefab;        
         }
         #endregion
 
@@ -50,6 +51,11 @@ namespace MyDefence
         public GameObject GetTurretToBuild()
         {
             return turretToBuild;
+        }
+
+        public void SetTrurretToBuild(GameObject trurret)
+        {
+            turretToBuild = trurret;
         }
         #endregion
     }

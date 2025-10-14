@@ -22,7 +22,7 @@ namespace MyDefence
         public float searchTimer = 0.2f;
 
         //발사 타이머 
-        private float fireTimer = 1f;
+        public float fireTimer = 1f;
         private float fireCountdown = 0f;
 
         //총알 프리팹 오브젝트

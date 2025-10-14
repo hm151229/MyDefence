@@ -1,6 +1,9 @@
 using UnityEngine;
 namespace MyDefence
 {
+    /// <summary>
+    /// 탄환 발사체를 관리하는 클래스
+    /// </summary>
     public class Bullet : MonoBehaviour
     {
         #region Variables
@@ -42,16 +45,22 @@ namespace MyDefence
         }
 
         //타겟 명중
-        private void HitTarget()
+        protected virtual void HitTarget()
         {
             //타격 위치에 이펙트 생성한 후 2초뒤에 타격 이펙트 오브젝트 kill
             GameObject effectGo = Instantiate(impactPrefab, transform.position, Quaternion.identity);
             Destroy(effectGo, 3f);
-            //타겟 킬
-            Destroy(target.gameObject);
+            //타격당한 적에게 데미지 주기
+            Damage(target);
 
             //탄환 킬
             Destroy(this.gameObject);
+        }
+        //타격당한 적에게 데미지 주기
+        protected void Damage(Transform enemy)
+        {
+            //타겟 킬
+            Destroy(enemy.gameObject);
         }
         #endregion
     }

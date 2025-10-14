@@ -10,16 +10,15 @@ namespace MyDefence
         //머신건 버튼 선택 시 호출되는 함수
         public void SelectMachineGun()
         {
-            Debug.Log("머신건 타워를 선택 하였습니다!!");
-            GameObject machineGun = BuildManager.Instance.machineGunPrefab;
-            BuildManager.Instance.SetTrurretToBuild(machineGun);
+            //Debug.Log("머신건 타워를 선택 하였습니다!!");
+            BuildManager.Instance.SetTrurretToBuild(BuildManager.Instance.machineGunPrefab);
         }
 
+        //미사일 버튼 선택 시 호출되는 함수
         public void SelectRocketTower()
         {
-            Debug.Log("미사일 타워를 선택 하였습니다!!");
-            GameObject Rocket = BuildManager.Instance.RocketPrefab;
-            BuildManager.Instance.SetTrurretToBuild(Rocket);
+            //Debug.Log("미사일 타워를 선택 하였습니다!!");
+            BuildManager.Instance.SetTrurretToBuild(BuildManager.Instance.RocketPrefab);
         }
         #endregion
     }

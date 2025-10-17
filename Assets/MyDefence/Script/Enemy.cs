@@ -11,6 +11,17 @@ namespace MyDefence
 
         //이동 속도
         public float speed = 5f;
+
+        //죽음 효과 프리팹 오브젝트
+        public GameObject deathEffectPrefab;
+        //체력
+        private float health;
+        [SerializeField]
+        private float startHealth = 100f;   //체력 초기값
+
+        //죽음 보상
+        [SerializeField]
+        private int rewardMoney = 50;
         #endregion
 
         #region Unity Event Method
@@ -18,6 +29,7 @@ namespace MyDefence
         void Start()
         {
             //초기화
+            health = startHealth;
             target = WayPoints.points[0];
         }
 
@@ -46,6 +58,34 @@ namespace MyDefence
             //Enemy 킬
             Destroy(this.gameObject);
             Debug.Log("도착했다");
+        }
+
+        //매개변수로 들어온 만큼 데미지를 입는다 
+        public void TakeDamage(float damage)
+        {
+            health -= damage; 
+            Debug.Log($"Enemy Health: {health}");
+
+            //죽음체크
+            if (health <= 0)
+            {
+                health = 0;
+                Die();
+            }
+        }
+
+        private void Die()
+        {
+            //죽음처리
+            //죽음 효과(vfx, sfx)
+            GameObject effectGo = Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+            Destroy(effectGo, 2f);
+            
+            //보상 처리(골드, 경험치, 아이템)
+            PlayerStats.AddMoney(rewardMoney);
+
+            //Enemy Kill
+            Destroy(this.gameObject);
         }
         #endregion
     }

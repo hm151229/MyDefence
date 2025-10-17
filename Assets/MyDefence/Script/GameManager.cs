@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 namespace MyDefence
 {
     /// <summary>
@@ -12,6 +13,7 @@ namespace MyDefence
         #endregion
 
         #region Unity Event Method
+
         private void Update()
         {
             if (isGameOver)
@@ -20,6 +22,12 @@ namespace MyDefence
             if(PlayerStats.Lives <= 0)
             {
                 GameOver();
+            }
+
+            //치트키
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                ShowMeTheMoney();
             }
         }
         #endregion
@@ -30,6 +38,12 @@ namespace MyDefence
         {
             Debug.Log("Game Over!");
             isGameOver = true;
+        }
+
+        //치트키
+        private void ShowMeTheMoney()
+        {
+            PlayerStats.AddMoney(100000);
         }
         #endregion
     }

@@ -3,14 +3,19 @@ using UnityEngine;
 namespace MyDefence
 {
     /// <summary> Enemy 를 관리하는 클래스
-    public class Enemy : MonoBehaviour
+    public class Enemy : MonoBehaviour, IDamageable
     {
         #region Variables
         //이동 목표 위치를 가지고 있는 오브젝트
         private Transform target;
 
         //이동 속도
-        public float speed = 5f;
+        [SerializeField]
+        private float speed = 10f;
+
+        //이동 속도 초기화
+        [SerializeField]
+        private float startSpeed = 4f;
 
         //죽음 효과 프리팹 오브젝트
         public GameObject deathEffectPrefab;
@@ -18,6 +23,9 @@ namespace MyDefence
         private float health;
         [SerializeField]
         private float startHealth = 100f;   //체력 초기값
+
+        //죽음 체크
+        private bool isDeath = false;
 
         //죽음 보상
         [SerializeField]
@@ -47,6 +55,9 @@ namespace MyDefence
             {
                 Arrive();
             }
+
+            //이동속도 초기 속도로 복원
+            speed = startSpeed;
         }
         #endregion
 
@@ -57,17 +68,16 @@ namespace MyDefence
             PlayerStats.UseLives(1);
             //Enemy 킬
             Destroy(this.gameObject);
-            Debug.Log("도착했다");
         }
 
         //매개변수로 들어온 만큼 데미지를 입는다 
         public void TakeDamage(float damage)
         {
             health -= damage; 
-            Debug.Log($"Enemy Health: {health}");
+            //Debug.Log($"Enemy Health: {health}");
 
             //죽음체크
-            if (health <= 0)
+            if (health <= 0 && isDeath == false)
             {
                 health = 0;
                 Die();
@@ -76,6 +86,9 @@ namespace MyDefence
 
         private void Die()
         {
+            //죽음 체크
+            isDeath = true;
+
             //죽음처리
             //죽음 효과(vfx, sfx)
             GameObject effectGo = Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
@@ -86,6 +99,12 @@ namespace MyDefence
 
             //Enemy Kill
             Destroy(this.gameObject);
+        }
+
+        //이동속도 느리게 하기
+        public void Slow (float rate)   //40% 감속
+        {
+            speed = startSpeed * (1 -rate);  //10*0.4 = 4 -> 10*(1-0.4) = 6
         }
         #endregion
     }
